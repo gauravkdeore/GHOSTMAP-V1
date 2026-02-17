@@ -11,7 +11,7 @@
 
 **Install Dependences:**
 ```bash
-git clone https://github.com/your-repo/ghostmap.git
+git clone https://github.com/gauravkdeore/GHOSTMAP-V1.git
 cd ghostmap
 pip install -r requirements.txt
 ```
@@ -260,3 +260,4 @@ If the server blocks you for scanning too fast:
     rate_limit: 2.0        # Max 2 requests per second
     probe_concurrency: 5   # Lower active threads
     ```
+
