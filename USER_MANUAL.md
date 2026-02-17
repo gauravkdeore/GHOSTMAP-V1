@@ -8,9 +8,98 @@ Run from the root directory:
 python -m ghostmap.cli --help
 ```
 
+
 ---
 
-## 💡 Why GHOSTMAP? (vs. Standard Tools)
+## ⚙️ Configuration
+
+GHOSTMAP is designed to be turnkey. A default `config.yaml` file is included in the project root.
+
+**1. Auto-Loading (Recommended)**
+GHOSTMAP **automatically loads** `config.yaml` (or `config.json`) if it exists in your current folder. You don't need to pass any flags.
+- Just edit the `config.yaml` file to change settings like `rate_limit` or `verbose`.
+- Run your commands normally:
+  ```bash
+  python -m ghostmap.cli collect -d example.com
+  ```
+
+**2. Manual Override**
+If you have multiple config files (e.g., `fast_scan.yaml`, `stealth_scan.yaml`), you can specify one explicitly:
+```bash
+python -m ghostmap.cli collect -d example.com --config fast_scan.yaml
+```
+
+**Configuration Reference (`config.yaml`):**
+```yaml
+# --- HTTP Client ---
+rate_limit: 2.0             # Max requests per second (default: 2.0)
+request_timeout: 30         # Timeout in seconds (default: 30)
+max_retries: 3              # Max retries for failed requests
+retry_backoff: 1.5          # Exponential backoff factor
+headers:                    # Custom global headers
+  Authorization: "Bearer xyz"
+
+# --- Collector (Scraping) ---
+wayback_timeout: 60
+max_js_file_size: 5242880   # 5MB max JS file size
+
+# --- Auditor (Scanning) ---
+probe_concurrency: 10       # Simultaneous threads for probing
+probe_timeout: 10
+probe_methods:              # HTTP methods to use for probing
+  - "HEAD"
+  - "GET"
+
+# --- Risk Scoring ---
+weight_undocumented: 30     # Score weight for endpoints missing from Swagger
+weight_active: 25           # Score weight for 200 OK endpoints
+weight_sensitive: 20        # Score weight for keywords like 'admin', 'secret'
+```
+
+---
+
+## 🖥️ Commands Reference
+
+Arguments common to all commands:
+- `--verbose (-v)`: Enable debug logging.
+- `--config (-c)`: Path to custom config file.
+
+### 1. `collect`
+Gather historical endpoints from public archives.
+- `--domain (-d)`: Target domain (e.g., `example.com`).
+- `--limit (-l)`: Max pages to scrape per source (default: 50).
+- `--skip-js`: Skip JavaScript file analysis.
+- `--skip-commoncrawl`: Skip CommonCrawl (faster but less data).
+- `--rate-limit`: Override rate limit just for this run.
+
+### 2. `audit`
+Probe endpoints and compare against documentation.
+- `--input (-i)`: Path to footprint file (from `collect`).
+- `--base-url (-b)`: Live server URL (e.g., `https://example.com` or `http://localhost:8080`).
+- `--swagger (-s)`: Path to OpenAPI/Swagger spec (JSON/YAML) for "Ghost" detection.
+- `--fuzz`: Enable brute-force fuzzing for common hidden paths.
+- `--scan-all`: Automatically scan all subdomains found in footprint.
+- `--header (-H)`: Add custom headers (e.g., `-H "Cookie: id=1"`).
+
+### 3. `sanitize`
+Clean data for report sharing.
+- `--input (-i)`: Source JSON file.
+- `--output (-o)`: Destination JSON file.
+- `--strict`: Aggressive filtering of potential secrets.
+
+### 4. `report`
+Generate visual reports.
+- `--input (-i)`: Audit results JSON.
+- `--output (-o)`: Output file path (.html or .pdf).
+
+### 5. `dashboard`
+Launch interactive GUI.
+- `--input (-i)`: Audit results JSON.
+- `--port (-p)`: Dashboard port (default: 8501).
+
+
+
+
 
 GHOSTMAP is an **AppSec Agent**, not just a URL fuzzer. It combines the best of multiple tools into one intelligent workflow.
 
