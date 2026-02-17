@@ -40,9 +40,18 @@ class DeduplicationEngine:
         # Handle relative paths
         url_lower = url.lower()
         if not url_lower.startswith(("http://", "https://", "ws://", "wss://")):
-            # For relative paths, just clean up
-            path = url.strip().rstrip("/")
-            return path.lower() if path.startswith("/") else path
+            # For relative paths, handle query params and sorting
+            try:
+                # Use a dummy scheme/host to parse relative paths with query params
+                # This allow generic logic to handle sorting below
+                dummy_url = f"http://dummy{url}" if url.startswith("/") else f"http://dummy/{url}"
+                parsed = urlparse(dummy_url)
+                # We will use the parsed object in the main flow, but we need to remember it was relative
+                is_relative = True
+            except Exception:
+                # Fallback
+                path = url.strip().rstrip("/")
+                return path
 
         try:
             parsed = urlparse(url)
@@ -72,6 +81,12 @@ class DeduplicationEngine:
         )
 
         # Rebuild without fragment
+        # Rebuild without fragment
+        if 'is_relative' in locals() and is_relative:
+             # Reconstruct relative path
+             relative_path = f"{path}?{sorted_query}" if sorted_query else path
+             return relative_path
+        
         normalized = urlunparse((scheme, netloc, path, parsed.params, sorted_query, ""))
         return normalized
 
