@@ -23,7 +23,6 @@ class AdaptiveThrottler:
         self.consecutive_errors = 0
         self.is_throttled = False
         self.last_adjustment = time.time()
-        self.last_adjustment = time.time()
         self._lock: Optional[asyncio.Lock] = None
 
     async def _get_lock(self) -> asyncio.Lock:
