@@ -54,7 +54,26 @@ def main(ctx, verbose, config):
             click.echo(f"Error loading config: {e}", err=True)
             sys.exit(1)
     else:
-        ctx.obj["config"] = GhostMapConfig(verbose=verbose)
+        # Auto-detect config in CWD
+        default_configs = ["config.yaml", "config.yml", "config.json"]
+        found_config = None
+        for f in default_configs:
+            if os.path.exists(f):
+                found_config = f
+                break
+        
+        if found_config:
+             try:
+                cfg = GhostMapConfig.load_from_file(found_config)
+                cfg.verbose = verbose
+                ctx.obj["config"] = cfg
+                click.echo(f"Auto-loaded configuration from {found_config}")
+             except Exception as e:
+                click.echo(f"Error loading auto-detected config {found_config}: {e}", err=True)
+                # Fallback to default? Or fail? Let's fail safe to default but warn
+                ctx.obj["config"] = GhostMapConfig(verbose=verbose)
+        else:
+            ctx.obj["config"] = GhostMapConfig(verbose=verbose)
 
 
 # ==========================================================================
