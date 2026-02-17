@@ -46,7 +46,9 @@ ghostmap collect --domain targetcompany.com --output public_footprint.json
 ghostmap sanitize --input public_footprint.json --output sanitized_footprint.json
 
 # Audit against internal docs
-ghostmap audit --input sanitized_footprint.json --swagger api-docs.yaml --output audit_results.json
+# Audit against internal docs
+ghostmap audit --input sanitized_footprint.json --output audit_results.json --swagger api-docs.yaml
+# Note: --swagger is Optional. Omit it to see ALL discovered endpoints.
 
 # Launch dashboard
 ghostmap dashboard --input audit_results.json
