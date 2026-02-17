@@ -6,6 +6,7 @@ import logging
 import requests
 import time
 from typing import Dict, Tuple, Optional
+from ghostmap.utils.http_client import RateLimitedClient
 
 logger = logging.getLogger("ghostmap.auditor.waf_detector")
 
@@ -16,6 +17,7 @@ class WafDetector:
 
     def __init__(self, config=None):
         self.config = config
+        self.client = RateLimitedClient(config)
 
     def detect(self, url: str) -> Tuple[bool, str, float]:
         """
@@ -30,7 +32,7 @@ class WafDetector:
 
         try:
             # 1. Passive Header Analysis
-            response = requests.get(url, timeout=10, verify=False)
+            response = self.client.get(url, timeout=10, verify=False)
             headers = response.headers
             
             # Known WAF Headers
@@ -66,7 +68,7 @@ class WafDetector:
             for p in payloads:
                 # Append to URL query
                 test_url = f"{url}/?id={p}"
-                resp = requests.get(test_url, timeout=5, verify=False)
+                resp = self.client.get(test_url, timeout=5, verify=False)
                 
                 # If blocked (403/406) but normal request was 200/404 -> WAF
                 if resp.status_code in (403, 406, 501) and response.status_code not in (403, 406, 501):
