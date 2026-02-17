@@ -69,11 +69,33 @@ Here is how the files in the `ghostmap/` folder correspond to the features above
 ## 🛡️ Key Algorithms Explained
 
 ### "Smart Fuzzing"
-Instead of using a dumb list of 1 million words, GHOSTMAP uses **Context Awareness**:
-1.  It probes `/`.
-2.  It looks at the `Server` header (e.g., `Server: nginx/1.18`).
-3.  It selects a specific "wordlist" for Nginx.
-4.  This reduces 1,000,000 requests down to 500 *highly probable* guesses.
+Does GHOSTMAP use a wordlist? **Yes**, but not like other tools.
+
+Most tools use a "dumb" list of 10,000+ random words (`admin`, `backup`, `old`, `test`...). This is noisy and slow.
+
+**GHOSTMAP uses "Curated Micro-Wordlists":**
+It has built-in lists for specific technologies (stored in `ghostmap/auditor/wordlists.py`).
+
+**Important:** These lists are **OFFLINE**. The tool does **NOT** download anything from the internet during the audit phase. The lists are hardcoded inside the Python application itself.
+
+**1. Detection (The "How"):**
+The `TechDetector` checks headers, cookies, and body content to find "Fingerprints".
+
+| If it sees... | It tags as... | And picks this wordlist... |
+| :--- | :--- | :--- |
+| Header `X-Powered-By: Express` | `node` | `package.json`, `node_modules/` |
+| Cookie `JSESSIONID` | `spring` / `java` | `/actuator/heapdump`, `h2-console` |
+| Body text "wp-content" | `wordpress` | `/wp-config.php`, `/xmlrpc.php` |
+| Header `Server: gunicorn` | `django` | `/admin/`, `/__debug__/` |
+
+**2. Selection:**
+It combines the **Common** list (always checked) with the specific lists for the detected tags.
+3.  **Scan**: It probes these specific, high-probability paths defined in the code.
+
+**Benefits:**
+*   **Faster**: We send 50 requests instead of 10,000.
+*   **Stealthier**: Less likely to trigger a firewall ("WAF") because we aren't spamming random errors.
+*   **Accurate**: We look for what *actually* exists on that specific server type.
 
 ### "Soft 404 Detection"
 Some servers return `200 OK` for everything, even garbage URLs. This tricks most tools.
