@@ -68,6 +68,7 @@ class TechDetector:
                 tags.add("drupal")
                 tags.add("php")
 
+
             if "apache-coyote" in server or "tomcat" in text:
                 tags.add("tomcat")
                 tags.add("java")
@@ -75,6 +76,21 @@ class TechDetector:
             if "jboss" in server or "jboss" in text:
                 tags.add("jboss")
                 tags.add("java")
+
+            # NEW: Web Servers & Modern Tech
+            if "nginx" in server:
+                tags.add("nginx")
+            
+            if "apache" in server and "coyote" not in server:  # Coyote is Tomcat
+                tags.add("apache")
+            
+            if "iis" in server or "microsoft-iis" in server:
+                tags.add("iis")
+                tags.add("asp")
+
+            # GraphQL Detection
+            if "graphql" in text or "apollo" in text or "x-apollo-tracing" in response.headers:
+                tags.add("graphql")
 
         except Exception as e:
             logger.debug(f"Tech detection failed for {url}: {e}")
