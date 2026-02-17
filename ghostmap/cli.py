@@ -523,7 +523,9 @@ def audit(ctx, input_file, swagger, git_repo, probe, base_url, output, rate_limi
                     parsed = urlparse(url)
                     if parsed.netloc:
                         domains.add(parsed.netloc)
-                except: pass
+                except Exception as e:
+                    logger.debug(f"Failed to extract domain from {url}: {e}")
+                    pass
         
         sorted_domains = sorted(list(domains))
         
