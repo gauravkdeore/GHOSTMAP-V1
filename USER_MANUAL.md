@@ -12,12 +12,21 @@ python -m ghostmap.cli --help
 
 ## 💡 Why GHOSTMAP? (vs. Standard Tools)
 
-GHOSTMAP is an **AppSec Agent**, not just a URL fuzzer. Here is how it differs from tools like `gobuster` or `waybackurls`:
+GHOSTMAP is an **AppSec Agent**, not just a URL fuzzer. It combines the best of multiple tools into one intelligent workflow.
 
+| Feature | 👻 GHOSTMAP | 🔨 Gobuster / Ffuf | 🕰️ Waybackurls |
+| :--- | :--- | :--- | :--- |
+| **Discovery Method** | **Hybrid** (Archive + Fuzzing) | Brute-force only | Archive only |
+| **Context Awareness** | **Smart** (Detects Tech Stack) | Blind (User must guess wordlists) | N/A |
+| **Ghost Detection** | **✅ Yes** (Compares w/ Swagger) | ❌ No | ❌ No |
+| **WAF Evasion** | **✅ Auto-Throttling & Retries** | ❌ Manual tuning required | ❌ No |
+| **False Positives** | **✅ Low** (Soft 404 Detection) | ❌ High (Needs manual filtering) | ❌ High |
+| **Report Generation** | **✅ Interactive HTML/PDF** | ❌ Text output only | ❌ Text output only |
+
+### Key Differentiators:
 1.  **👻 The "Ghost" Concept**: Standard tools just find URLs. GHOSTMAP compares findings against your **Swagger/OpenAPI** specs to identify *undocumented* (Ghost) endpoints—the highest risk for attacks.
 2.  **🧠 Smart Fuzzing**: Instead of blindly trying 10,000 words, it uses a **Tech Detector**. If it sees a Spring Boot server, it scans for Java actuators; if WordPress, it scans for plugins.
-3.  **🧬 Hybrid Discovery**: It combines **Historical Mining** (Wayback Machine, 10+ years of data) with **Active Fuzzing** (guessing hidden `.env` files), giving you Organic + brute-force results.
-4.  **🛡️ Soft 404 Detection**: It intelligently detects "fake" 200 OK responses from WAFs by establishing a baseline, reducing false positives.
+3.  **🛡️ Zero-Config WAF Evasion**: Unlike other tools where you must manually tweak rate limits, GHOSTMAP automatically detects 429/403 errors and backs off, ensuring your scan finishes without getting banned.
 
 ---
 
@@ -142,8 +151,9 @@ If a site redirects **everything** to a "Whoops" page (returning 200 OK), GHOSTM
 
 ### "Rate Limited / 429 Errors"
 If the server blocks you for scanning too fast:
--   **Solution**: Edit `ghostmap_config.yaml` to slow down.
+-   **Auto-Adjustment**: GHOSTMAP now automatically detects 429/403 errors and backs off exponentially. It will also lower the concurrency if a WAF is detected.
+-   **Manual Override**: You can still enforce a stricter limit in `ghostmap_config.yaml`:
     ```yaml
+    rate_limit: 2.0        # Max 2 requests per second
     probe_concurrency: 5   # Lower active threads
-    probe_delay: 1.0       # Wait 1 second between requests
     ```
