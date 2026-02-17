@@ -2,6 +2,20 @@
 
 **GhostMap** helps you find hidden, forgotten, or undocumented API endpoints that attackers might exploit.
 
+
+## 📋 Installation & Prerequisites
+
+**Requirements:**
+- Python 3.8 or higher
+- Internet access (for `collect` mode only)
+
+**Install Dependences:**
+```bash
+git clone https://github.com/your-repo/ghostmap.git
+cd ghostmap
+pip install -r requirements.txt
+```
+
 ## 🚀 Quick Start
 Run from the root directory:
 ```bash
