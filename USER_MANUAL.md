@@ -11,7 +11,7 @@
 
 **Install Dependences:**
 ```bash
-git clone https://github.com/gauravkdeore/GHOSTMAP-V1.git
+git clone https://github.com/your-repo/ghostmap.git
 cd ghostmap
 pip install -r requirements.txt
 ```
@@ -82,24 +82,24 @@ Arguments common to all commands:
 Gather historical endpoints from public archives.
 - `--domain (-d)`: Target domain (e.g., `example.com`).
 - `--limit (-l)`: Max pages to scrape per source (default: 50).
-- `--skip-js`: Skip JavaScript file analysis.
-- `--skip-commoncrawl`: Skip CommonCrawl (faster but less data).
-- `--rate-limit`: Override rate limit just for this run.
+- `--skip-js`: *(Optional)* Skip JavaScript file analysis.
+- `--skip-commoncrawl`: *(Optional)* Skip CommonCrawl (faster but less data).
+- `--rate-limit`: *(Optional)* Override rate limit just for this run.
 
 ### 2. `audit`
 Probe endpoints and compare against documentation.
 - `--input (-i)`: Path to footprint file (from `collect`).
 - `--base-url (-b)`: Live server URL (e.g., `https://example.com` or `http://localhost:8080`).
-- `--swagger (-s)`: Path to OpenAPI/Swagger spec (JSON/YAML) for "Ghost" detection.
-- `--fuzz`: Enable brute-force fuzzing for common hidden paths.
-- `--scan-all`: Automatically scan all subdomains found in footprint.
-- `--header (-H)`: Add custom headers (e.g., `-H "Cookie: id=1"`).
+- `--swagger (-s)`: *(Optional)* Path to OpenAPI/Swagger spec for "Ghost" detection. If omitted, all found endpoints are reported.
+- `--fuzz`: *(Optional)* Enable brute-force fuzzing for common hidden paths.
+- `--scan-all`: *(Optional)* Automatically scan all subdomains found in footprint.
+- `--header (-H)`: *(Optional)* Add custom headers (e.g., `-H "Cookie: id=1"`).
 
 ### 3. `sanitize`
 Clean data for report sharing.
 - `--input (-i)`: Source JSON file.
 - `--output (-o)`: Destination JSON file.
-- `--strict`: Aggressive filtering of potential secrets.
+- `--strict`: *(Optional)* Aggressive filtering of potential secrets.
 
 ### 4. `report`
 Generate visual reports.
@@ -109,7 +109,7 @@ Generate visual reports.
 ### 5. `dashboard`
 Launch interactive GUI.
 - `--input (-i)`: Audit results JSON.
-- `--port (-p)`: Dashboard port (default: 8501).
+- `--port (-p)`: *(Optional)* Dashboard port (default: 8501).
 
 
 
@@ -260,4 +260,3 @@ If the server blocks you for scanning too fast:
     rate_limit: 2.0        # Max 2 requests per second
     probe_concurrency: 5   # Lower active threads
     ```
-
