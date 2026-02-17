@@ -24,6 +24,11 @@ COMMON = [
     "elmah.axd",
     "web.config",
     "manifest.json",
+    ".well-known/security.txt",
+    ".well-known/openid-configuration",
+    "api-docs",
+    "v2/api-docs",
+    "swagger-ui.html",
 ]
 
 # Cloud & DevOps (Always useful to check)
@@ -42,6 +47,47 @@ CLOUD_DEVOPS = [
     "jenkins/",
     "kube-system/",
     "config/k8s.yml",
+    ".kube/config",
+    "id_rsa",
+    "id_rsa.pub",
+    ".docker/config.json",
+    "daemon.json",
+]
+
+# Web Servers
+NGINX = [
+    "nginx.conf",
+    "nginx_status",
+    "/usr/local/nginx/conf/nginx.conf",
+    "etc/nginx/nginx.conf",
+    ".nginx",
+]
+
+APACHE = [
+    ".htaccess",
+    ".htpasswd",
+    "server-status",
+    "server-info",
+    "balancer-manager",
+]
+
+IIS = [
+    "web.config",
+    "Global.asax",
+    "iisstart.htm",
+    "Trace.axd",
+]
+
+# API & Modern Web
+GRAPHQL = [
+    "graphql",
+    "graphiql",
+    "api/graphql",
+    "v1/graphql",
+    "graphql/console",
+    "explorer",
+    "altair",
+    "playground",
 ]
 
 # CMS & Servers
@@ -52,6 +98,12 @@ WORDPRESS = [
     "wp-config.php.bak",
     "wp-includes/",
     "xmlrpc.php",
+    "wp-content/uploads/",
+    "readme.html",
+    "license.txt",
+    "wp-content/debug.log",
+    "wp-json/wp/v2/users",  # User enumeration
+    "wp-json/wp/v2/posts",
 ]
 
 TOMCAT = [
@@ -59,18 +111,23 @@ TOMCAT = [
     "manager/status",
     "host-manager/html",
     "examples/servlets/",
+    "docs/",
+    "RELEASE-NOTES.txt",
 ]
 
 JBOSS = [
     "jmx-console/",
     "web-console/",
     "invoker/JMXInvokerServlet",
+    "admin-console/",
 ]
 
 DRUPAL = [
     "user/login",
     "CHANGELOG.txt",
     "sites/default/settings.php",
+    "install.php",
+    "UPGRADE.txt",
 ]
 
 SPRING = [
@@ -84,6 +141,12 @@ SPRING = [
     "actuator/beans",
     "actuator/configprops",
     "h2-console",
+    "actuator/gateway/routes",
+    "actuator/logfile",
+    "actuator/prometheus",
+    "actuator/threaddump",
+    "actuator/conditions",
+    "actuator/auditevents",
 ]
 
 DJANGO = [
@@ -91,12 +154,14 @@ DJANGO = [
     "admin/login/",
     "static/admin/",
     "__debug__/",
+    "db.sqlite3",
 ]
 
 RAILS = [
     "rails/info/properties",
     "rails/info/routes",
     "rails/info",
+    "config/database.yml",
 ]
 
 PHP = [
@@ -107,12 +172,15 @@ PHP = [
     "wp-login.php",
     "composer.json",
     "composer.lock",
+    "test.php",
 ]
 
 NODE = [
     "package.json",
     "package-lock.json",
     "node_modules/",
+    "npm-debug.log",
+    "yarn.lock",
 ]
 
 LIFERAY = [
@@ -137,6 +205,10 @@ WORDLISTS = {
     "tomcat": TOMCAT,
     "jboss": JBOSS,
     "drupal": DRUPAL,
+    "nginx": NGINX,
+    "apache": APACHE,
+    "iis": IIS,
+    "graphql": GRAPHQL,
 }
 
 # Add Cloud/DevOps to Common?
