@@ -1,0 +1,45 @@
+# GHOSTMAP Configuration
+# Usage: ghostmap --config ghostmap_config.yaml [COMMAND]
+
+# --- Global ---
+verbose: false
+output_dir: "data"
+
+# --- HTTP Client ---
+rate_limit: 1.0          # Requests per second (float)
+max_retries: 3
+retry_backoff: 1.5       # Exponential backoff multiplier
+request_timeout: 30      # Seconds
+user_agents:
+  - "GhostMap/1.0 (Security Research Tool)"
+  - "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+
+# --- Collector ---
+wayback_timeout: 60
+commoncrawl_timeout: 60
+max_js_file_size: 5242880  # 5MB in bytes
+js_download_concurrency: 5
+
+# --- Auditor ---
+probe_timeout: 10
+probe_concurrency: 10
+probe_methods:
+  - "HEAD"
+  - "GET"
+
+# --- Risk Scoring Weights ---
+weight_undocumented: 30
+weight_active: 25
+weight_sensitive_keywords: 20
+weight_no_auth: 15
+weight_staleness: 10
+
+# --- Sensitive Keywords ---
+sensitive_keywords:
+  - "debug"
+  - "admin"
+  - "internal"
+  - "secret"
+  - "key"
+  - "token"
+  - "auth"
