@@ -1,0 +1,23 @@
+# Core
+click>=8.1.0
+requests>=2.31.0
+rich>=13.0.0
+tqdm>=4.65.0
+
+# Sanitizer
+bleach>=6.0.0
+
+# Auditor
+aiohttp>=3.9.0
+pyyaml>=6.0.0
+
+# Reporter
+reportlab>=4.0.0
+
+# Dashboard
+streamlit>=1.30.0
+plotly>=5.18.0
+
+# Testing
+pytest>=7.4.0
+responses>=0.24.0

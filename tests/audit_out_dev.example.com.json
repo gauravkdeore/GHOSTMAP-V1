@@ -1,0 +1,74 @@
+{
+  "meta": {
+    "tool": "ghostmap",
+    "version": "1.0.0",
+    "timestamp": "2026-02-13T09:08:00.528502",
+    "input_file": "tests/mock_footprint_multi.json",
+    "swagger_spec": null,
+    "git_repo": null,
+    "probing_enabled": false,
+    "base_url": "https://dev.example.com"
+  },
+  "summary": {
+    "total_endpoints": 3,
+    "high_risk": 0,
+    "medium_risk": 1,
+    "low_risk": 2,
+    "documented": 0
+  },
+  "endpoints": [
+    {
+      "url": "https://dev.example.com/admin",
+      "method": "GET",
+      "risk_score": 40,
+      "risk_level": "MEDIUM",
+      "risk_color": "yellow",
+      "risk_factors": [
+        {
+          "factor": "undocumented",
+          "points": 30,
+          "detail": "Endpoint not found in API documentation"
+        },
+        {
+          "factor": "sensitive_keywords",
+          "points": 10,
+          "detail": "Contains: admin"
+        }
+      ],
+      "is_documented": false,
+      "is_ghost": true
+    },
+    {
+      "url": "https://api.example.com/v1/users",
+      "method": "GET",
+      "risk_score": 30,
+      "risk_level": "LOW",
+      "risk_color": "green",
+      "risk_factors": [
+        {
+          "factor": "undocumented",
+          "points": 30,
+          "detail": "Endpoint not found in API documentation"
+        }
+      ],
+      "is_documented": false,
+      "is_ghost": false
+    },
+    {
+      "url": "https://example.com/login",
+      "method": "GET",
+      "risk_score": 30,
+      "risk_level": "LOW",
+      "risk_color": "green",
+      "risk_factors": [
+        {
+          "factor": "undocumented",
+          "points": 30,
+          "detail": "Endpoint not found in API documentation"
+        }
+      ],
+      "is_documented": false,
+      "is_ghost": false
+    }
+  ]
+}
