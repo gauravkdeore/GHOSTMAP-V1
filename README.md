@@ -28,8 +28,11 @@ GHOSTMAP is an Application Security tool that discovers "ghost" API endpoints �
 3. **Audit** — Compare collected endpoints against internal documentation (Git, Swagger/OpenAPI), probe for active ghost endpoints
 4. **Report** — Generate risk-scored reports and interactive dashboards
 
-## Quick Start
+## 📋 Prerequisites
+- **Python 3.8+**
+- `pip` (Python package manager)
 
+## 🚀 Quick Start
 ```bash
 pip install -r requirements.txt
 
