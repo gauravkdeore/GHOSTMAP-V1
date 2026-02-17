@@ -1,0 +1,3 @@
+{
+  "tests/test_throttler.py::test_adaptive_throttler_backoff": true
+}
