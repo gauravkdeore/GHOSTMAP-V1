@@ -2,10 +2,7 @@
 click>=8.1.0
 requests>=2.31.0
 rich>=13.0.0
-tqdm>=4.65.0
 
-# Sanitizer
-bleach>=6.0.0
 
 # Auditor
 aiohttp>=3.9.0
