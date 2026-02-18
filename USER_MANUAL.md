@@ -85,6 +85,7 @@ Gather historical endpoints from public archives.
 - `--skip-js`: *(Optional)* Skip JavaScript file analysis.
 - `--skip-commoncrawl`: *(Optional)* Skip CommonCrawl (faster but less data).
 - `--rate-limit`: *(Optional)* Override rate limit just for this run.
+- `--source-code (-s)`: *(Optional)* Path to local source code directory (e.g., `./src`) to mine endpoints directly without crawling.
 
 ### 2. `audit`
 Probe endpoints and compare against documentation.
@@ -201,6 +202,26 @@ GHOSTMAP is an **AppSec Agent**, not just a URL fuzzer. It combines the best of 
     *GHOSTMAP will use this cookie for all probes, allowing it to find endpoints hidden behind login screens.*
 
 ---
+
+---
+
+### Scenario E: Static Analysis (Internal/Offline)
+**Goal:** Scan an internal application (e.g., restricted Dev environment) or source code where you cannot crawl public archives or perform active fuzzing.
+
+**Steps:**
+1.  **Mine Source Code**: Point GHOSTMAP to your local source code directory.
+    ```bash
+    python -m ghostmap.cli collect --domain internal-app --source-code /path/to/your/repo --output scans/internal/footprint.json
+    ```
+    *   This extracts API routes/endpoints directly from Python (Flask/Django/FastAPI), Java (Spring), Node.js (Express), Go, etc.
+    *   **No network traffic** is sent during this phase.
+
+2.  **Audit vs Swagger**: Compare the code-mined endpoints against your Swagger spec.
+    ```bash
+    python -m ghostmap.cli audit -i scans/internal/footprint.json --swagger /path/to/openapi.yaml
+    ```
+    *   This instantly identifies **"Ghost Endpoints"** (exist in Code but missing from Docs).
+    *   You can omit `-b` (base URL) if you only want to compare Code vs Docs without probing liveliness.
 
 ---
 
