@@ -21,7 +21,8 @@ graph TD
 **Goal:** Find every URL that has *ever* existed for your target domain.
 1.  **Time Travel**: GHOSTMAP asks the **Wayback Machine** and **Common Crawl**: "Show me every page you've seen for `example.com` in the last 10 years."
 2.  **JavaScript Mining**: It downloads JavaScript files (like `app.js`) and extracts API endpoints hidden inside the code.
-3.  **Deduplication**: It cleans the list. If it finds `page.php?id=1` and `page.php?id=2`, it knows they are the same "endpoint" and keeps only one.
+3.  **Static Analysis**: (Optional) It can mine endpoints directly from your **local source code** (Java, Python, Go, Node.js) if you provide the path.
+4.  **Deduplication**: It cleans the list. If it finds `page.php?id=1` and `page.php?id=2`, it knows they are the same "endpoint" and keeps only one.
 
 ### Phase 2: The Audit (Security Guard)
 **Goal:** Check which old URLs are still alive and if they are dangerous.
