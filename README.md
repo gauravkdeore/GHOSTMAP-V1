@@ -20,6 +20,7 @@ GHOSTMAP is an Application Security tool that discovers "ghost" API endpoints �
 - **🧠 Smart Fuzzing**: Detects tech stack (Spring Boot, WordPress, etc.) and fuzzes relevant paths only.
 - **🛡️ WAF Evasion**: Automatically detects WAFs (Cloudflare, Akamai) and adjusts rate limits.
 - **🛡️ Soft 404 Detection**: Filters out "fake" 200 OK responses to reduce noise.
+- **🔬 Static Analysis**: Mines endpoints directly from source code (Python, JS, Go, Java, etc.) for internal apps.
 
 ## How It Works
 
@@ -41,6 +42,9 @@ pip install -r requirements.txt
 
 # Collect public footprint
 ghostmap collect --domain targetcompany.com --output public_footprint.json
+
+# OR Collect from local source code (Static Analysis)
+ghostmap collect --domain internal-app --source-code /path/to/repo --output internal_footprint.json
 
 # Sanitize for internal transfer
 ghostmap sanitize --input public_footprint.json --output sanitized_footprint.json
