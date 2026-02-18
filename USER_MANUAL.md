@@ -225,6 +225,29 @@ GHOSTMAP is an **AppSec Agent**, not just a URL fuzzer. It combines the best of 
 
 ---
 
+    *   You can omit `-b` (base URL) if you only want to compare Code vs Docs without probing liveliness.
+
+---
+
+### Scenario F: Zero Knowledge / Black Box (No Code, No Docs)
+**Goal:** Scan a completely unknown internal app where you have **no** source code, **no** documentation, and **no** public history.
+
+**Steps:**
+1.  **Initialize Scan**: Run `collect` just to create the project structure (it won't find anything, that's expected).
+    ```bash
+    python -m ghostmap.cli collect -d internal-app
+    ```
+
+2.  **Blind Fuzzing**: Run `audit` with aggressive fuzzing to brute-force discover endpoints.
+    ```bash
+    python -m ghostmap.cli audit -i scans/internal-app/LATEST/footprint.json -b http://internal-app --fuzz --fuzz-mode all
+    ```
+    *   `--fuzz`: Enables the active brute-forcer.
+    *   `--fuzz-mode all`: Forces GHOSTMAP to try **all** wordlists (Java, PHP, Python, etc.) since we don't know the tech stack.
+    *   This will brute-force common possibilities like `/admin`, `/login`, `/api/health`, etc.
+
+---
+
 ### Scenario D: Reporting & Analysis
 **Goal:** Share findings with your team or filter through noise.
 
