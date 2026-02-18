@@ -88,8 +88,9 @@ def main(ctx, verbose, config):
 @click.option("--skip-commoncrawl", is_flag=True, help="Skip CommonCrawl scraping")
 @click.option("--rate-limit", "-rl", type=float, default=None, help="Rate limit (requests per second)")
 @click.option("--header", "-H", multiple=True, help="Custom header 'Key: Value'")
+@click.option("--source-code", "-s", default=None, help="Path to local source code directory for static analysis")
 @click.pass_context
-def collect(ctx, domain, output, limit, skip_js, skip_commoncrawl, rate_limit, header):
+def collect(ctx, domain, output, limit, skip_js, skip_commoncrawl, rate_limit, header, source_code):
     """🔍 Collect public footprint from internet archives."""
     from ghostmap.collector.wayback import WaybackScraper
     from ghostmap.collector.commoncrawl import CommonCrawlScraper
@@ -213,6 +214,38 @@ def collect(ctx, domain, output, limit, skip_js, skip_commoncrawl, rate_limit, h
     else:
         console.print("\n[dim]⏭ Skipping JS analysis[/dim]")
 
+    # --- Static Analysis (Source Code) ---
+    source_endpoints = []
+    if source_code:
+        console.print(f"\n[bold yellow]📡 Phase 4/4: Static Source Code Analysis[/bold yellow]")
+        from ghostmap.auditor.git_miner import GitEndpointMiner
+
+        if os.path.exists(source_code):
+             with Progress(
+                SpinnerColumn(),
+                TextColumn("[progress.description]{task.description}"),
+                console=console,
+            ) as progress:
+                task = progress.add_task("Mining source code...", total=None)
+                
+                miner = GitEndpointMiner()
+                # Use detailed mining to get source file info
+                detailed_results = miner.mine_detailed(source_code)
+                
+                for item in detailed_results:
+                    dedup.add({
+                        "url": item["endpoint"],
+                        "source": "static_analysis",
+                        "source_file": item["source_file"],
+                        "framework": item["framework"],
+                    })
+                    source_endpoints.append(item)
+                
+                progress.update(task, description=f"[green]✅ Source Code: {len(source_endpoints)} endpoints[/green]")
+             console.print(f"  Found [bold]{len(source_endpoints)}[/bold] endpoints in {source_code}")
+        else:
+             console.print(f"[bold red]❌ Source code path not found: {source_code}[/bold red]")
+
     # --- Final Results ---
     results = dedup.get_results()
     stats = dedup.get_stats()
@@ -245,6 +278,8 @@ def collect(ctx, domain, output, limit, skip_js, skip_commoncrawl, rate_limit, h
     summary.add_row("Wayback URLs", str(len(wayback_urls)))
     summary.add_row("CommonCrawl URLs", str(len(cc_urls)))
     summary.add_row("JS Endpoints", str(len(js_endpoints)))
+    if source_code:
+        summary.add_row("Source Code Endpoints", str(len(source_endpoints)))
     summary.add_row("Unique Endpoints", str(stats["unique_endpoints"]))
     summary.add_row("Dedup Ratio", f"{stats['dedup_ratio']:.0%}")
     summary.add_row("Output File", output)
